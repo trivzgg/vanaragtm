@@ -1,0 +1,1024 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vānara GTM — GTM Engineering</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=DM+Mono:wght@400;500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    /* ─── DESIGN TOKENS ─────────────────────────────────── */
+    :root {
+      --bg:          #0a0a08;
+      --bg-2:        #111110;
+      --bg-3:        #1a1a17;
+      --border:      #2a2a26;
+      --border-hi:   #3d3d36;
+      --text:        #e8e6dc;
+      --text-muted:  #8a8878;
+      --text-faint:  #4a4a42;
+      --accent:      #1d7a4f;
+      --accent-hi:   #25a068;
+      --accent-pale: #0f3d28;
+      --gold:        #c4a96a;
+      --gold-dim:    #7a6740;
+      --serif:       'Cormorant Garamond', Georgia, serif;
+      --mono:        'DM Mono', monospace;
+      --sans:        'Inter', sans-serif;
+      --radius:      4px;
+      --max:         1140px;
+    }
+
+    /* ─── RESET ─────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      font-size: 16px;
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: inherit; text-decoration: none; }
+    img { max-width: 100%; display: block; }
+
+    /* ─── LAYOUT ─────────────────────────────────────────── */
+    .container { max-width: var(--max); margin: 0 auto; padding: 0 2rem; }
+    .section { padding: 7rem 0; }
+    .section--tight { padding: 4rem 0; }
+    hr.rule {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 0;
+    }
+
+    /* ─── NAV ────────────────────────────────────────────── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      background: rgba(10,10,8,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 1.1rem 0;
+    }
+    .nav-inner {
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 0 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .nav-logo img {
+      height: 32px;
+      width: auto;
+      filter: brightness(0) invert(1);
+    }
+    .nav-wordmark {
+      font-family: var(--serif);
+      font-size: 1.1rem;
+      font-weight: 300;
+      letter-spacing: 0.12em;
+      color: var(--text);
+    }
+    .nav-links {
+      display: flex;
+      gap: 2.5rem;
+      list-style: none;
+      font-size: 0.78rem;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      font-family: var(--mono);
+    }
+    .nav-links a { transition: color 0.2s; }
+    .nav-links a:hover { color: var(--text); }
+    .nav-cta {
+      background: var(--accent);
+      color: #fff;
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      letter-spacing: 0.08em;
+      padding: 0.55rem 1.2rem;
+      border-radius: var(--radius);
+      transition: background 0.2s;
+    }
+    .nav-cta:hover { background: var(--accent-hi); }
+
+    /* ─── HERO ───────────────────────────────────────────── */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding: 10rem 0 6rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-grid {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(var(--border) 1px, transparent 1px),
+        linear-gradient(90deg, var(--border) 1px, transparent 1px);
+      background-size: 60px 60px;
+      opacity: 0.3;
+      mask-image: radial-gradient(ellipse at center, black 20%, transparent 80%);
+    }
+    .hero-glow {
+      position: absolute;
+      top: 30%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 600px;
+      height: 400px;
+      background: radial-gradient(ellipse, rgba(29,122,79,0.12) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .hero-inner {
+      position: relative;
+      z-index: 1;
+      max-width: 820px;
+    }
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      border: 1px solid var(--border-hi);
+      border-radius: 100px;
+      padding: 0.35rem 0.9rem;
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      color: var(--accent-hi);
+      letter-spacing: 0.06em;
+      margin-bottom: 2rem;
+    }
+    .hero-badge::before {
+      content: '';
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--accent-hi);
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+    .hero-headline {
+      font-family: var(--serif);
+      font-size: clamp(3rem, 6vw, 5.5rem);
+      font-weight: 300;
+      line-height: 1.08;
+      letter-spacing: -0.01em;
+      color: var(--text);
+      margin-bottom: 1.5rem;
+    }
+    .hero-headline em {
+      font-style: italic;
+      color: var(--gold);
+    }
+    .hero-sub {
+      font-size: 1.1rem;
+      color: var(--text-muted);
+      max-width: 560px;
+      line-height: 1.75;
+      margin-bottom: 2.5rem;
+      font-weight: 300;
+    }
+    .hero-actions {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--accent);
+      color: #fff;
+      font-family: var(--mono);
+      font-size: 0.8rem;
+      letter-spacing: 0.06em;
+      padding: 0.85rem 1.8rem;
+      border-radius: var(--radius);
+      transition: background 0.2s;
+    }
+    .btn-primary:hover { background: var(--accent-hi); }
+    .btn-ghost {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      border: 1px solid var(--border-hi);
+      color: var(--text-muted);
+      font-family: var(--mono);
+      font-size: 0.8rem;
+      letter-spacing: 0.06em;
+      padding: 0.85rem 1.8rem;
+      border-radius: var(--radius);
+      transition: border-color 0.2s, color 0.2s;
+    }
+    .btn-ghost:hover { border-color: var(--text-muted); color: var(--text); }
+
+    /* ─── STAT BAR ───────────────────────────────────────── */
+    .stat-bar {
+      background: var(--bg-2);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 2.5rem 0;
+    }
+    .stat-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 2rem;
+    }
+    .stat-item { text-align: center; }
+    .stat-num {
+      font-family: var(--serif);
+      font-size: 2.4rem;
+      font-weight: 300;
+      color: var(--text);
+      line-height: 1;
+    }
+    .stat-num span { color: var(--accent-hi); }
+    .stat-label {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      color: var(--text-faint);
+      letter-spacing: 0.1em;
+      margin-top: 0.4rem;
+    }
+
+    /* ─── SECTION LABELS ─────────────────────────────────── */
+    .section-label {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.15em;
+      color: var(--accent-hi);
+      margin-bottom: 1.2rem;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+    .section-label::before {
+      content: '';
+      display: block;
+      width: 20px; height: 1px;
+      background: var(--accent);
+    }
+    .section-title {
+      font-family: var(--serif);
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      font-weight: 300;
+      line-height: 1.15;
+      color: var(--text);
+      margin-bottom: 1.2rem;
+    }
+    .section-title em { font-style: italic; color: var(--gold); }
+    .section-body {
+      font-size: 1rem;
+      color: var(--text-muted);
+      max-width: 540px;
+      line-height: 1.8;
+    }
+
+    /* ─── SERVICES ───────────────────────────────────────── */
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      margin-top: 4rem;
+    }
+    .service-card {
+      background: var(--bg-2);
+      padding: 2.5rem;
+      transition: background 0.2s;
+    }
+    .service-card:hover { background: var(--bg-3); }
+    .service-num {
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      color: var(--text-faint);
+      letter-spacing: 0.12em;
+      margin-bottom: 1.2rem;
+    }
+    .service-name {
+      font-family: var(--serif);
+      font-size: 1.4rem;
+      font-weight: 400;
+      color: var(--text);
+      margin-bottom: 0.8rem;
+    }
+    .service-desc {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      line-height: 1.75;
+    }
+    .service-tag {
+      display: inline-block;
+      margin-top: 1.2rem;
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.08em;
+      color: var(--accent-hi);
+      border: 1px solid var(--accent-pale);
+      padding: 0.25rem 0.6rem;
+      border-radius: 2px;
+      background: rgba(29,122,79,0.06);
+    }
+
+    /* ─── JOURNEY ────────────────────────────────────────── */
+    .journey-wrapper {
+      margin-top: 4rem;
+    }
+    .journey-step {
+      display: grid;
+      grid-template-columns: 60px 1fr;
+      gap: 2rem;
+      padding: 2.5rem 0;
+      border-bottom: 1px solid var(--border);
+      position: relative;
+    }
+    .journey-step:last-child { border-bottom: none; }
+    .step-num {
+      font-family: var(--serif);
+      font-size: 2.5rem;
+      font-weight: 300;
+      color: var(--text-faint);
+      line-height: 1;
+      padding-top: 0.2rem;
+    }
+    .step-content {}
+    .step-title {
+      font-family: var(--serif);
+      font-size: 1.3rem;
+      font-weight: 400;
+      color: var(--text);
+      margin-bottom: 0.6rem;
+    }
+    .step-desc {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      line-height: 1.75;
+    }
+    .step-output {
+      margin-top: 0.8rem;
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.08em;
+      color: var(--gold-dim);
+    }
+    .step-output span { color: var(--gold); }
+
+    /* ─── PRICING ────────────────────────────────────────── */
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      margin-top: 4rem;
+    }
+    .pricing-card {
+      background: var(--bg-2);
+      padding: 2.5rem 2rem;
+      position: relative;
+    }
+    .pricing-card.featured {
+      background: var(--bg-3);
+    }
+    .pricing-card.featured::before {
+      content: 'MOST POPULAR';
+      position: absolute;
+      top: 1.2rem; right: 1.2rem;
+      font-family: var(--mono);
+      font-size: 0.6rem;
+      letter-spacing: 0.12em;
+      color: var(--accent-hi);
+      border: 1px solid var(--accent-pale);
+      padding: 0.2rem 0.5rem;
+      border-radius: 2px;
+    }
+    .pricing-tier {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.12em;
+      color: var(--text-faint);
+      margin-bottom: 1rem;
+    }
+    .pricing-price {
+      font-family: var(--serif);
+      font-size: 2rem;
+      font-weight: 300;
+      color: var(--text);
+      line-height: 1;
+      margin-bottom: 0.4rem;
+    }
+    .pricing-sub {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      color: var(--text-faint);
+      margin-bottom: 1.5rem;
+    }
+    .pricing-divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 1.5rem 0;
+    }
+    .pricing-features {
+      list-style: none;
+      font-size: 0.84rem;
+      color: var(--text-muted);
+      line-height: 1.9;
+    }
+    .pricing-features li::before {
+      content: '→ ';
+      color: var(--accent);
+      font-family: var(--mono);
+    }
+    .pricing-note {
+      margin-top: 1.2rem;
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      color: var(--text-faint);
+      line-height: 1.6;
+    }
+
+    /* ─── ABOUT ──────────────────────────────────────────── */
+    .about-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6rem;
+      align-items: start;
+    }
+    @media (max-width: 768px) {
+      .about-layout { grid-template-columns: 1fr; gap: 3rem; }
+    }
+    .about-origin {
+      background: var(--bg-2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 2rem;
+      margin-top: 2rem;
+    }
+    .origin-label {
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.12em;
+      color: var(--gold-dim);
+      margin-bottom: 0.8rem;
+    }
+    .origin-text {
+      font-family: var(--serif);
+      font-size: 1.05rem;
+      color: var(--text-muted);
+      line-height: 1.8;
+    }
+    .origin-text strong { color: var(--gold); font-weight: 400; }
+    .team-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+    .team-card {
+      background: var(--bg-2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 2rem;
+    }
+    .team-role {
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.12em;
+      color: var(--accent-hi);
+      margin-bottom: 0.5rem;
+    }
+    .team-name {
+      font-family: var(--serif);
+      font-size: 1.5rem;
+      font-weight: 300;
+      color: var(--text);
+      margin-bottom: 0.8rem;
+    }
+    .team-bio {
+      font-size: 0.87rem;
+      color: var(--text-muted);
+      line-height: 1.75;
+    }
+    .team-credential {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      margin-top: 1rem;
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.08em;
+      color: var(--gold);
+      border: 1px solid var(--gold-dim);
+      padding: 0.25rem 0.6rem;
+      border-radius: 2px;
+    }
+
+    /* ─── CONTACT ────────────────────────────────────────── */
+    .contact-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 5rem;
+      align-items: start;
+    }
+    @media (max-width: 768px) {
+      .contact-layout { grid-template-columns: 1fr; gap: 3rem; }
+    }
+    .contact-email {
+      font-family: var(--serif);
+      font-size: 1.3rem;
+      font-weight: 300;
+      color: var(--accent-hi);
+      margin-top: 1rem;
+    }
+    .contact-email a:hover { text-decoration: underline; }
+    .contact-form {
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
+    }
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+    .form-group { display: flex; flex-direction: column; gap: 0.4rem; }
+    .form-label {
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.1em;
+      color: var(--text-faint);
+    }
+    .form-input, .form-select, .form-textarea {
+      background: var(--bg-2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      color: var(--text);
+      font-family: var(--sans);
+      font-size: 0.9rem;
+      padding: 0.75rem 1rem;
+      transition: border-color 0.2s;
+      outline: none;
+      width: 100%;
+    }
+    .form-input:focus, .form-select:focus, .form-textarea:focus {
+      border-color: var(--accent);
+    }
+    .form-select { appearance: none; cursor: pointer; }
+    .form-textarea { resize: vertical; min-height: 130px; }
+    .form-submit {
+      background: var(--accent);
+      color: #fff;
+      font-family: var(--mono);
+      font-size: 0.8rem;
+      letter-spacing: 0.08em;
+      padding: 0.9rem 2rem;
+      border: none;
+      border-radius: var(--radius);
+      cursor: pointer;
+      transition: background 0.2s;
+      align-self: flex-start;
+    }
+    .form-submit:hover { background: var(--accent-hi); }
+
+    /* ─── FOOTER ─────────────────────────────────────────── */
+    footer {
+      background: var(--bg-2);
+      border-top: 1px solid var(--border);
+      padding: 3rem 0;
+    }
+    .footer-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+    }
+    .footer-brand {
+      font-family: var(--serif);
+      font-size: 1rem;
+      font-weight: 300;
+      letter-spacing: 0.12em;
+      color: var(--text-muted);
+    }
+    .footer-copy {
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      color: var(--text-faint);
+    }
+    .footer-entity {
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      color: var(--text-faint);
+      letter-spacing: 0.06em;
+    }
+
+    /* ─── UTILITY ────────────────────────────────────────── */
+    .mt-2 { margin-top: 0.5rem; }
+    .mt-4 { margin-top: 1rem; }
+    .mt-8 { margin-top: 2rem; }
+    .col-full { grid-column: 1 / -1; }
+
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .form-row { grid-template-columns: 1fr; }
+      .pricing-grid { grid-template-columns: 1fr; }
+      .services-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ─── NAV ─────────────────────────────────────────────── -->
+<nav>
+  <div class="nav-inner">
+    <a href="#" class="nav-logo">
+      <img src="vanara_logo.png" alt="Vānara GTM" />
+      <span class="nav-wordmark">VĀNARA GTM</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="#services">Services</a></li>
+      <li><a href="#journey">How it works</a></li>
+      <li><a href="#pricing">Pricing</a></li>
+      <li><a href="#about">About</a></li>
+    </ul>
+    <a href="#contact" class="nav-cta">Get in touch →</a>
+  </div>
+</nav>
+
+<!-- ─── HERO ─────────────────────────────────────────────── -->
+<section class="hero">
+  <div class="hero-grid"></div>
+  <div class="hero-glow"></div>
+  <div class="container">
+    <div class="hero-inner">
+      <div class="hero-badge">GTM Engineering · Signal-Driven Outbound</div>
+      <h1 class="hero-headline">
+        Outbound that <em>outmanoeuvres.</em><br />
+        Revenue that compounds.
+      </h1>
+      <p class="hero-sub">
+        Vānara GTM builds the infrastructure, sequences, and signal engines that turn your ICP into pipeline — fast, asymmetrically, and without burning your domain.
+      </p>
+      <div class="hero-actions">
+        <a href="#contact" class="btn-primary">Start a conversation →</a>
+        <a href="#pricing" class="btn-ghost">See pricing</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── STAT BAR ──────────────────────────────────────────── -->
+<div class="stat-bar">
+  <div class="container">
+    <div class="stat-grid">
+      <div class="stat-item">
+        <div class="stat-num">Top <span>32</span></div>
+        <div class="stat-label">CLAY WORLD CUP 2026</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num"><span>100%</span></div>
+        <div class="stat-label">SIGNAL-DRIVEN APPROACH</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num"><span>Zero</span></div>
+        <div class="stat-label">SPRAY & PRAY</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num"><span>Full</span> Stack</div>
+        <div class="stat-label">GTM ENGINEERING</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ─── SERVICES ──────────────────────────────────────────── -->
+<section class="section" id="services">
+  <div class="container">
+    <div class="section-label">What we do</div>
+    <h2 class="section-title">Asymmetric GTM.<br /><em>Built to scale.</em></h2>
+    <p class="section-body">We engineer your entire go-to-market motion — from ICP definition to buying-window signals, infrastructure, copy, and sequences. Everything your competitors are doing manually, we automate intelligently.</p>
+
+    <div class="services-grid">
+      <div class="service-card">
+        <div class="service-num">01</div>
+        <div class="service-name">ICP & Signal Engineering</div>
+        <p class="service-desc">We define your ideal customer profile, map your total addressable market, and build signal-scoring tables in Clay that detect buying windows before your competitors do.</p>
+        <div class="service-tag">Clay · Apollo · Signal Detection</div>
+      </div>
+      <div class="service-card">
+        <div class="service-num">02</div>
+        <div class="service-name">Outbound Infrastructure</div>
+        <p class="service-desc">Email domains, mailbox rotation, warm-up, DMARC/SPF/DKIM — we build deliverability infrastructure that keeps you out of spam and in conversations.</p>
+        <div class="service-tag">Email Infrastructure · Deliverability</div>
+      </div>
+      <div class="service-card">
+        <div class="service-num">03</div>
+        <div class="service-name">Multi-Channel Sequences</div>
+        <p class="service-desc">A/B-tested copy, custom dynamic variables, mailbox rotation, and sequence logic built in Apollo — so every touch lands at the right time with the right message.</p>
+        <div class="service-tag">Apollo · Copywriting · A/B Testing</div>
+      </div>
+      <div class="service-card">
+        <div class="service-num">04</div>
+        <div class="service-name">Reporting & Diagnostics</div>
+        <p class="service-desc">Monthly performance reporting, subject line optimisation, open rate analysis, and full-funnel diagnostics — so you always know what's working and why.</p>
+        <div class="service-tag">Analytics · Optimisation</div>
+      </div>
+      <div class="service-card">
+        <div class="service-num">05</div>
+        <div class="service-name">Sales Support</div>
+        <p class="service-desc">Warm lead handoff messaging, sales playbooks, and a fractional sales partner embedded in your motion — Marlene bridges GTM engineering and revenue conversion.</p>
+        <div class="service-tag">Sales Enablement · Pipeline</div>
+      </div>
+      <div class="service-card">
+        <div class="service-num">06</div>
+        <div class="service-name">Partnership &amp; Equity Structures</div>
+        <p class="service-desc">For the right venture, we structure equity or revenue-share arrangements — contributing domain expertise, GTM IP, and workflow automation in exchange for a defined stake.</p>
+        <div class="service-tag">Rev-Share · Equity · Partnership</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="rule" />
+
+<!-- ─── JOURNEY ────────────────────────────────────────────── -->
+<section class="section" id="journey">
+  <div class="container">
+    <div class="section-label">How it works</div>
+    <h2 class="section-title">From audit to<br /><em>active pipeline.</em></h2>
+    <p class="section-body">A structured four-phase engagement that builds your GTM engine end to end — no guesswork, no spray and pray.</p>
+
+    <div class="journey-wrapper">
+      <div class="journey-step">
+        <div class="step-num">01</div>
+        <div class="step-content">
+          <div class="step-title">Sales Audit & Strategy</div>
+          <p class="step-desc">We start with a full audit of your current motion — what's working, what's leaking, and where the biggest opportunities live. ICP definition, TAM analysis, and a clear GTM strategy document come out of this phase.</p>
+          <div class="step-output">Output: <span>GTM Strategy Doc · ICP Definition · TAM Map</span></div>
+        </div>
+      </div>
+      <div class="journey-step">
+        <div class="step-num">02</div>
+        <div class="step-content">
+          <div class="step-title">Infrastructure Build</div>
+          <p class="step-desc">Email domains acquired and warmed, mailboxes configured, DMARC/SPF/DKIM validated. Simultaneously, we build your Clay tables — contact enrichment, signal scoring, and buying-window detection logic baked in.</p>
+          <div class="step-output">Output: <span>Live Email Infrastructure · Clay Signal Tables · Enriched Contact Lists</span></div>
+        </div>
+      </div>
+      <div class="journey-step">
+        <div class="step-num">03</div>
+        <div class="step-content">
+          <div class="step-title">Sequence Activation</div>
+          <p class="step-desc">Multi-channel sequences go live in Apollo — A/B tested subject lines, custom dynamic variables, and trigger-based logic tied to your signals. First pipeline appears within weeks, not quarters.</p>
+          <div class="step-output">Output: <span>Active Sequences · A/B Tests Running · First Meetings Booked</span></div>
+        </div>
+      </div>
+      <div class="journey-step">
+        <div class="step-num">04</div>
+        <div class="step-content">
+          <div class="step-title">Optimise & Scale</div>
+          <p class="step-desc">Monthly reporting, diagnostic reviews, subject line iteration, and signal refinement. Marlene manages warm leads as they surface. The engine compounds — the longer it runs, the better it performs.</p>
+          <div class="step-output">Output: <span>Monthly Report · Optimised Sequences · Growing Pipeline</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="rule" />
+
+<!-- ─── PRICING ────────────────────────────────────────────── -->
+<section class="section" id="pricing">
+  <div class="container">
+    <div class="section-label">Pricing</div>
+    <h2 class="section-title">Transparent pricing.<br /><em>No hidden fees.</em></h2>
+    <p class="section-body">All tiers include a sales audit, ICP definition, and consulting calls. Hard tool costs (Apollo, email domains, warm-up) are noted separately — we help you minimise them.</p>
+
+    <div class="pricing-grid">
+      <div class="pricing-card">
+        <div class="pricing-tier">ENTRY</div>
+        <div class="pricing-price">~$400<span style="font-size:1rem; color: var(--text-muted);">/mo</span></div>
+        <div class="pricing-sub">+ tool costs (~$50–70/mo client side)</div>
+        <hr class="pricing-divider" />
+        <ul class="pricing-features">
+          <li>Sales audit & ICP definition</li>
+          <li>Targeted contact list build</li>
+          <li>TAM analysis</li>
+          <li>Consulting calls</li>
+        </ul>
+        <div class="pricing-note">Best for: early-stage founders validating outbound before scaling.</div>
+      </div>
+
+      <div class="pricing-card">
+        <div class="pricing-tier">HYBRID</div>
+        <div class="pricing-price">~$300<span style="font-size:1rem; color: var(--text-muted);">/mo + hourly</span></div>
+        <div class="pricing-sub">+ tool costs (~$50–70/mo client side)</div>
+        <hr class="pricing-divider" />
+        <ul class="pricing-features">
+          <li>Everything in Entry</li>
+          <li>Hands-on execution time</li>
+          <li>Sales support</li>
+          <li>Regular reporting</li>
+        </ul>
+        <div class="pricing-note">Best for: teams who want strategy + selective execution without full-service commitment.</div>
+      </div>
+
+      <div class="pricing-card featured">
+        <div class="pricing-tier">GROWTH</div>
+        <div class="pricing-price">~$2,600<span style="font-size:1rem; color: var(--text-muted);">/mo</span></div>
+        <div class="pricing-sub">+ warm-up tool costs (~$5/mailbox)</div>
+        <hr class="pricing-divider" />
+        <ul class="pricing-features">
+          <li>Everything in Entry</li>
+          <li>3 email domains + mailboxes</li>
+          <li>Clay signal tables</li>
+          <li>Multi-channel sequence setup</li>
+          <li>Monthly reporting</li>
+        </ul>
+        <div class="pricing-note">Best for: revenue teams ready to build a proper outbound engine.</div>
+      </div>
+
+      <div class="pricing-card">
+        <div class="pricing-tier">FULL SERVICE</div>
+        <div class="pricing-price">~$4,000<span style="font-size:1rem; color: var(--text-muted);">/mo</span></div>
+        <div class="pricing-sub">All tool costs included</div>
+        <hr class="pricing-divider" />
+        <ul class="pricing-features">
+          <li>Full end-to-end ownership</li>
+          <li>Data, infrastructure, copy</li>
+          <li>Sequences & diagnostics</li>
+          <li>DMARC monitoring</li>
+          <li>Nothing left on your plate</li>
+        </ul>
+        <div class="pricing-note">Best for: founders who want to focus on closing — not building.</div>
+      </div>
+
+      <div class="pricing-card" style="grid-column: 1 / -1; background: var(--bg); border-top: 1px solid var(--border);">
+        <div class="pricing-tier">PARTNERSHIP MODEL</div>
+        <div class="pricing-price" style="font-size:1.5rem;">Equity / Rev-Share</div>
+        <div class="pricing-sub">Structured in partnership agreement</div>
+        <hr class="pricing-divider" />
+        <ul class="pricing-features" style="display:grid; grid-template-columns: 1fr 1fr; gap: 0 2rem;">
+          <li>Domain expertise contribution</li>
+          <li>GTM workflow IP</li>
+          <li>Shared build, shared upside</li>
+          <li>Defined stake structure</li>
+        </ul>
+        <div class="pricing-note" style="margin-top: 1rem;">For the right venture at the right stage — reach out to discuss.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="rule" />
+
+<!-- ─── ABOUT ──────────────────────────────────────────────── -->
+<section class="section" id="about">
+  <div class="container">
+    <div class="about-layout">
+      <div>
+        <div class="section-label">About Vānara</div>
+        <h2 class="section-title">Warriors.<br /><em>Not broadcasters.</em></h2>
+        <p class="section-body">
+          Vānara GTM is a GTM engineering consultancy built on one principle: that asymmetric outbound — precise, signal-driven, unconventional — beats volume every time.
+          <br /><br />
+          We don't spray. We don't pray. We find the buying window, engineer the message, and deliver it before your competition knows the opportunity exists.
+        </p>
+
+        <div class="about-origin">
+          <div class="origin-label">THE NAME</div>
+          <p class="origin-text">
+            <strong>Vānara</strong> (वानर) is Sanskrit for the divine monkey warriors of the Ramayana — intelligent, fast, unconventional fighters who helped win an impossible battle through strategy, agility, and force multiplication. That's the spirit we bring to every GTM engagement.
+          </p>
+        </div>
+      </div>
+
+      <div class="team-grid">
+        <div class="team-card">
+          <div class="team-role">FOUNDER · GTM ENGINEER</div>
+          <div class="team-name">Triv Moodley</div>
+          <p class="team-bio">
+            Triv is a Clay power user and GTM engineer with hands-on experience building signal-based buying-window detection tables, configuring Apollo sequences, diagnosing email deliverability at scale, and running full-funnel outbound operations for B2B SaaS companies.
+            <br /><br />
+            He founded Vānara GTM to bring enterprise-grade GTM engineering to teams that deserve it — without the enterprise price tag or the consultancy bloat.
+          </p>
+          <div class="team-credential">🏆 Top 32 — Clay World Cup 2026</div>
+        </div>
+
+        <div class="team-card">
+          <div class="team-role">HEAD OF SALES · PARTNER</div>
+          <div class="team-name">Marlene Myburg</div>
+          <p class="team-bio">
+            Marlene bridges the gap between pipeline and revenue — managing warm leads, supporting sales handoffs, and ensuring the conversations our GTM engine generates actually close. She brings the human intelligence that turns engineered outbound into real relationships.
+          </p>
+          <a href="https://www.linkedin.com/in/marlene-myburgh/" target="_blank" class="team-credential">LinkedIn →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="rule" />
+
+<!-- ─── CONTACT ────────────────────────────────────────────── -->
+<section class="section" id="contact">
+  <div class="container">
+    <div class="contact-layout">
+      <div>
+        <div class="section-label">Get in touch</div>
+        <h2 class="section-title">Let's build<br /><em>something sharp.</em></h2>
+        <p class="section-body">
+          Tell us where you are and where you want to go. We'll tell you honestly whether we're the right fit — and if we are, we move fast.
+        </p>
+        <div class="contact-email">
+          <a href="mailto:triv@vanaragtm.com">triv@vanaragtm.com</a>
+        </div>
+        <div class="contact-email" style="font-size: 1rem; margin-top: 0.5rem;">
+          <a href="mailto:marlene@vanaragtm.com">marlene@vanaragtm.com</a>
+        </div>
+      </div>
+
+      <form class="contact-form" onsubmit="handleSubmit(event)">
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="name">NAME</label>
+            <input class="form-input" id="name" type="text" placeholder="Your name" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="company">COMPANY</label>
+            <input class="form-input" id="company" type="text" placeholder="Company name" required />
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="email">EMAIL</label>
+          <input class="form-input" id="email" type="email" placeholder="your@company.com" required />
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="interest">I'M INTERESTED IN</label>
+          <select class="form-select" id="interest">
+            <option value="">Select a service...</option>
+            <option>Entry — $400/mo</option>
+            <option>Hybrid — $300/mo + hourly</option>
+            <option>Growth — $2,600/mo</option>
+            <option>Full Service — $4,000/mo</option>
+            <option>Partnership / Equity model</option>
+            <option>Just exploring</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="request">TELL US ABOUT YOUR SITUATION</label>
+          <textarea class="form-textarea" id="request" placeholder="Where are you now? What's not working? What does success look like in 90 days?" required></textarea>
+        </div>
+        <button type="submit" class="form-submit">Send →</button>
+        <div id="form-msg" style="font-family: var(--mono); font-size: 0.75rem; color: var(--accent-hi); display: none;">
+          Message sent. We'll be in touch within 24 hours.
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- ─── FOOTER ─────────────────────────────────────────────── -->
+<footer>
+  <div class="container">
+    <div class="footer-inner">
+      <div class="footer-brand">VĀNARA GTM</div>
+      <div class="footer-copy">© 2026 Vānara GTM. All rights reserved.</div>
+      <div class="footer-entity">A Guerrilla Garage (Pty) Ltd venture · South Africa</div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  function handleSubmit(e) {
+    e.preventDefault();
+    const btn = e.target.querySelector('.form-submit');
+    btn.textContent = 'Sending...';
+    btn.disabled = true;
+    setTimeout(() => {
+      btn.style.display = 'none';
+      document.getElementById('form-msg').style.display = 'block';
+      e.target.reset();
+    }, 800);
+  }
+</script>
+
+</body>
+</html>
